@@ -1,10 +1,14 @@
+"""FastAPI application entry point for ForgePilot AI."""
+
 import logging
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from backend.app.api.health import router as health_router
+from backend.app.api.router import api_router
 from backend.app.core.config import get_settings
+from backend.app.core.exceptions import register_exception_handlers
 from backend.app.core.logging import configure_logging
 
 settings = get_settings()
@@ -15,7 +19,7 @@ logger = logging.getLogger("forgepilot")
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Handle application startup and shutdown."""
 
     logger.info("Starting %s", settings.app_name)
@@ -27,15 +31,16 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title=settings.app_name,
-    description=("Autonomous repository debugging and repair agent."),
+    description="Autonomous repository debugging and repair agent.",
     version="0.1.0",
     debug=settings.debug,
     lifespan=lifespan,
 )
 
+register_exception_handlers(app)
 
 app.include_router(
-    health_router,
+    api_router,
     prefix=settings.api_prefix,
 )
 
