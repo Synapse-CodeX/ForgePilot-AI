@@ -1,10 +1,12 @@
+"""Application configuration loaded from environment variables."""
+
 from functools import lru_cache
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    """Application configuration loaded from environment variables."""
+    """Application configuration."""
 
     app_name: str = "ForgePilot AI"
     app_env: str = "development"
@@ -13,6 +15,11 @@ class Settings(BaseSettings):
     api_prefix: str = "/api"
 
     groq_api_key: str = ""
+    groq_model: str = "openai/gpt-oss-20b"
+    groq_temperature: float = 0.0
+    groq_timeout_seconds: int = 60
+    groq_max_retries: int = 2
+
     github_token: str = ""
 
     database_url: str = "sqlite:///./forgepilot.db"
@@ -32,4 +39,5 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     """Return the cached application settings."""
+
     return Settings()
