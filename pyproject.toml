@@ -9,12 +9,13 @@ dependencies = [
     "uvicorn[standard]",
     "pydantic-settings",
     "langchain-groq",
+    "httpx",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "httpx",
     "pytest",
+    "pytest-asyncio",
     "ruff",
 ]
 
@@ -22,6 +23,7 @@ dev = [
 testpaths = ["backend/tests"]
 pythonpath = ["."]
 addopts = "-ra"
+asyncio_mode = "auto"
 
 [tool.ruff]
 line-length = 88
@@ -39,3 +41,8 @@ select = [
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+
+[tool.setuptools.packages.find]
+include = ["backend*"]
+exclude = ["backend.tests*"]

@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     groq_max_retries: int = 2
 
     github_token: str = ""
+    github_api_base_url: str = "https://api.github.com"
+    github_timeout_seconds: int = 30
 
     database_url: str = "sqlite:///./forgepilot.db"
     vector_store_path: str = "./data/vectorstore"
