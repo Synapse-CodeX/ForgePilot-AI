@@ -24,6 +24,9 @@ class Settings(BaseSettings):
     github_api_base_url: str = "https://api.github.com"
     github_timeout_seconds: int = 30
 
+    repository_workspace_root: str = "./sandbox/workspaces"
+    max_inspected_file_bytes: int = 1_000_000
+
     database_url: str = "sqlite:///./forgepilot.db"
     vector_store_path: str = "./data/vectorstore"
 
