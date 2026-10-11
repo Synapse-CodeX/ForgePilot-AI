@@ -5,6 +5,7 @@ from backend.app.schemas.analysis import (
     RepositoryAnalysis,
 )
 from backend.app.schemas.issue import IssueContext
+from backend.app.schemas.patch import PatchProposal
 from backend.app.schemas.repository import RepositoryContext
 from backend.app.schemas.root_cause import (
     RootCauseAnalysis,
@@ -14,6 +15,7 @@ from backend.app.schemas.root_cause import (
 __all__ = [
     "AnalyzedFile",
     "IssueContext",
+    "PatchProposal",
     "RepositoryAnalysis",
     "RepositoryContext",
     "RootCauseAnalysis",
