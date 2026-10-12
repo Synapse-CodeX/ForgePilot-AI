@@ -14,6 +14,10 @@ from backend.app.schemas.root_cause import (
     RootCauseAnalysis,
     RootCauseEvidence,
 )
+from backend.app.schemas.validation import (
+    ValidationCommandResult,
+    ValidationReport,
+)
 
 __all__ = [
     "AnalyzedFile",
@@ -24,4 +28,6 @@ __all__ = [
     "RepositoryContext",
     "RootCauseAnalysis",
     "RootCauseEvidence",
+    "ValidationCommandResult",
+    "ValidationReport",
 ]
