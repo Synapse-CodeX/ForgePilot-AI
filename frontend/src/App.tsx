@@ -1,78 +1,66 @@
-import {
-  Activity,
-  GitBranch,
-  ShieldCheck,
-  Wrench,
-} from "lucide-react";
+import { useEffect, useState } from 'react';
+import { AppShell } from './components/layout/AppShell';
+import { HomePage } from './pages/HomePage';
+import { NewRepairPage } from './pages/NewRepairPage';
+import { RepairWorkspacePage } from './pages/RepairWorkspacePage';
+import { HistoryPage } from './pages/HistoryPage';
 
-function App() {
-  return (
-    <div className="app">
-      <header className="header">
-        <div className="brand">
-          <div className="brand-mark">
-            <Wrench size={18} strokeWidth={1.8} />
-          </div>
+type Route =
+  | { id: 'home' }
+  | { id: 'repair.new' }
+  | { id: 'repair.workspace'; jobId: string }
+  | { id: 'history' };
 
-          <div>
-            <h1>ForgePilot</h1>
-            <span>Autonomous Repository Repair</span>
-          </div>
-        </div>
+function parseHash(hash: string): Route {
+  const h = hash.replace(/^#/, '');
 
-        <div className="system-status">
-          <span className="status-dot" />
-          System operational
-        </div>
-      </header>
+  if (!h || h === '/' || h === '')            return { id: 'home' };
+  if (h === '/repair/new')                     return { id: 'repair.new' };
+  if (h === '/history')                        return { id: 'history' };
 
-      <main className="main">
-        <section className="hero">
-          <span className="eyebrow">
-            <Activity size={14} />
-            AI ENGINEERING PLATFORM
-          </span>
+  // /repair/:jobId
+  const workspaceMatch = h.match(/^\/repair\/([^/]+)$/);
+  if (workspaceMatch) {
+    return { id: 'repair.workspace', jobId: workspaceMatch[1] };
+  }
 
-          <h2>
-            From GitHub issue
-            <br />
-            to validated patch.
-          </h2>
-
-          <p>
-            ForgePilot autonomously investigates repository issues,
-            generates repairs, and validates them inside an isolated
-            execution environment.
-          </p>
-
-          <div className="hero-actions">
-            <button className="primary-button">
-              <GitBranch size={16} />
-              Start a repair
-            </button>
-
-            <button className="secondary-button">
-              <ShieldCheck size={16} />
-              View evaluations
-            </button>
-          </div>
-        </section>
-
-        <section className="status-card">
-          <div>
-            <span className="card-label">ENGINE STATUS</span>
-
-            <h3>Ready for a repair job</h3>
-          </div>
-
-          <div className="status-check">
-            <ShieldCheck size={18} />
-            All systems operational
-          </div>
-        </section>
-      </main>
-    </div>
-  );
+  // Fallback to home
+  return { id: 'home' };
 }
 
-export default App;
+function useRoute(): Route {
+  const [route, setRoute] = useState<Route>(() =>
+    parseHash(window.location.hash),
+  );
+
+  useEffect(() => {
+    const onHashChange = () => setRoute(parseHash(window.location.hash));
+    window.addEventListener('hashchange', onHashChange);
+    return () => window.removeEventListener('hashchange', onHashChange);
+  }, []);
+
+  return route;
+}
+
+function RouteView({ route }: { route: Route }) {
+  switch (route.id) {
+    case 'home':
+      return <HomePage />;
+    case 'repair.new':
+      return <NewRepairPage />;
+    case 'repair.workspace':
+      return <RepairWorkspacePage jobId={route.jobId} />;
+    case 'history':
+      return <HistoryPage />;
+  }
+}
+
+export default function App() {
+  const route = useRoute();
+
+  return (
+    <AppShell>
+      <RouteView route={route} />
+    </AppShell>
+  );
+}
